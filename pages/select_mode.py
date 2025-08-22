@@ -38,7 +38,7 @@ def select_mode(sid: str):
             app.storage.messages[chat_id].clear()
 
         # Navigate to chat page
-        ui.navigate.to(f'/chat?room={chat_id}&mode={mode_letter}&sid={sid}')
+        ui.navigate.to(f'/survey/start?room={chat_id}&mode={mode_letter}&sid={sid}')
         ui.navigate.reload() 
 
     ui.button('Start Chat', on_click=on_submit).classes('mt-4')

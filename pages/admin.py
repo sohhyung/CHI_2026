@@ -25,13 +25,27 @@ def admin_page(sid: str):
         ui.label('No users are currently in C mode.').classes('text-gray-500')
         return
 
-    # Show buttons for each user
+    def make_enter_handler(target_room: str):
+        def handler():
+            # 새 탭에서 클릭이 발생한 "그" 요청의 SID로 관리자 바인딩
+            current_sid = ui.context.client.id
+            app.storage.sessions[current_sid] = 'admin'
+            ui.navigate.to(f'/chat?room={target_room}&mode=C&sid={current_sid}', new_tab=True)
+        return handler
+
+    def make_showinfo_handler(target_uid: str):
+        def handler():
+            current_sid = ui.context.client.id
+            app.storage.sessions[current_sid] = 'admin'
+            mode = app.storage.chat_modes.get(target_uid, 'C')
+            ui.navigate.to(f'/admin/show_info?uid={target_uid}&mode={mode}', new_tab=True)
+        return handler
+
+    # 사용자별 행
     for uid in c_mode_users:
-        chat_id = app.storage.chat_rooms.get(uid)
+        chat_id = app.storage.chat_rooms.get(uid)  # 예: 'chatroom-<uid>'
         with ui.row().classes('items-center my-2'):
             ui.label(f'{uid} (chatroom: {chat_id})')
-            ui.button(
-                'Enter Chat',
-                on_click=lambda c=chat_id: ui.navigate.to(f'/chat?room={c}&mode=C&sid={admin_sid}')
-            )
+            ui.button('Enter Chat', on_click=make_enter_handler(chat_id))
+            ui.button('Show Info', on_click=make_showinfo_handler(uid))
             
