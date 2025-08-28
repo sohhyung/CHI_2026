@@ -88,7 +88,7 @@ def chat(room: str, mode: str, sid: str):
             async def generate_response():
                 await asyncio.sleep(random.uniform(5, 10))
                 history = [msg['text'] for msg in app.storage.messages[chat_id][-5:]]
-                response = get_response(mode, history)
+                response = get_response(mode, user_id, history)
                 timestamp2 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 app.storage.messages[chat_id].append({'type': 'agent', 'text': response, 'time': timestamp2})
                 save_chat_to_json(user_id, mode, app.storage.messages[chat_id],'chat_logs')
@@ -114,7 +114,6 @@ def chat(room: str, mode: str, sid: str):
     with ui.row().classes('w-full'):
         message_input.on('keydown.enter', lambda e: send_message())
         ui.button('Send', on_click=send_message)
-        ui.button('Exit Chat', on_click=exit_chat).props('color=negative')
 
     # Initial render
     render_messages()

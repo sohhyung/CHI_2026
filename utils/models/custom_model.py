@@ -11,4 +11,4 @@ def get_custom_response(messages: list[str]) -> str:
         str: Generated response from the custom model.
     """
     # TODO: Replace this with actual custom model logic
-    return "(This is a placeholder response from the custom model.)"
+    return "안녕하세요! 만나서 반가워요! 오늘 기분은 어떠신가요?"

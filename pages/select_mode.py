@@ -18,7 +18,7 @@ def select_mode(sid: str):
     ui.label(f'Welcome, {user_id}').classes('text-lg font-bold mb-4')
 
     mode_select = ui.select(
-        options=['A (GPT)', 'B (Custom Model)', 'C (Chat with Human)'],
+        options=['A', 'B', 'C'],
         label='Select Chat Mode',
     ).classes('w-full')
 
