@@ -1,7 +1,7 @@
 # pages/survey.py
 from nicegui import ui
 from state import app
-from utils.save import save_user_survey
+from utils.save import save_user_survey, save_initial_signal_from_survey, save_initial_tom_from_survey, save_memory
 
 # 간단 저장소(없으면 생성)
 if not hasattr(app.storage, 'surveys'):
@@ -255,6 +255,10 @@ def survey_discomfort(room: str, mode: str, sid: str):
 
                     # 영속 저장
                     save_user_survey(user_id, mode, payload)
+                    if mode=="B":
+                        save_initial_signal_from_survey(user_id,payload)
+                        save_initial_tom_from_survey(user_id,payload['topic_text'])
+
 
                     # 채팅방 이동
                     chat_id = app.storage.chat_rooms.get(user_id) or f'chatroom-{user_id}'

@@ -2,7 +2,7 @@
 from nicegui import ui
 from datetime import datetime
 from state import app
-from utils.save import save_chat_to_json
+from utils.save import save_chat_to_json,save_signal
 from utils.response_router import get_response
 import time
 import random
@@ -86,9 +86,17 @@ def chat(room: str, mode: str, sid: str):
         # 2. �ڵ����� (A, B ����� ����)
         if mode in ['A', 'B']:
             async def generate_response():
-                await asyncio.sleep(random.uniform(5, 10))
+                if mode =='A':
+                    await asyncio.sleep(random.uniform(10, 30))
+                else:
+                    await asyncio.sleep(random.uniform(5, 8))
+
                 history = [msg['text'] for msg in app.storage.messages[chat_id][-5:]]
+                last_utterance = app.storage.messages[chat_id][-1]['text']
                 response = get_response(mode, user_id, history)
+                if mode=='B':
+                    save_signal(user_id,last_utterance)
+                    
                 timestamp2 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 app.storage.messages[chat_id].append({'type': 'agent', 'text': response, 'time': timestamp2})
                 save_chat_to_json(user_id, mode, app.storage.messages[chat_id],'chat_logs')
